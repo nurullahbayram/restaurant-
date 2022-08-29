@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAll() {
         Comparator<Product> sorted = Comparator.comparingDouble(c -> c.getStockAmount() - c.getMinumumLimit());
         //(c1, c2)-> Double.compare(c1.getStockAmount()-c1.getMinumumLimit(),c2.getStockAmount()-c2.getMinumumLimit());
-        return productRepository.findAll().stream().sorted(sorted).toList();
+        return productRepository.findAll();
         //return  null;
     }
 
