@@ -82,12 +82,13 @@ public class MenuServiceImpl implements MenuService {
                 productList = productList+", "+ing.getproduct().getProductName();
                 System.out.println(productList);
             }
+            if(productList.length()>=1)productList=productList.substring(1);
             menuOutput.add(new MenuOutput(
                             menu.getId(),
                             menu.getMenuName(),
                             menu.getMenuType(),
                             menu.getImagePath(),
-                            productList.substring(1)  )
+                            productList  )
             );
         }
 

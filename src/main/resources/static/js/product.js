@@ -2,11 +2,11 @@ var api = "http://localhost:9090/api/product" ;
 var productTable;
 var measurementUnit;
 var productType = "";
-var user = "Chef";
+var user;
 
 function init(){
-
-
+    initProductTable();
+    getRole();
 
     console.log('inside init' );
     $("#measurementUnit").click( function () {
@@ -27,6 +27,24 @@ function init(){
        }
   });
 
+function getRole(){
+    console.log('Inside getRole');
+    $.get({
+        url: "/api/getrole" ,
+        dataType: "text",
+        success: function(role){
+            getProduct(role);
+            //alert(role);
+            user=role;
+            console.log(role);
+
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            console.log('Error: ' + textStatus);
+        }
+    });
+}
+
     $("#create-product").click( function () {
         $("#id").val('');
         $("#productName").val('');
@@ -41,7 +59,7 @@ function init(){
         $("#litre").attr('checked',false);
         $("#food").attr('checked',false);
         $("#drink").attr('checked',false);
-        $("#other").attr('checked',false);
+        //$("#other").attr('checked',false);
         $('#productModal').modal('show');
     });
     $("#edit-product").click( function () {
@@ -66,10 +84,10 @@ function init(){
             }else if(product.productType=="Drink"){
                 $("#drink").attr('checked','checked');
                 productType="Drink";
-            }else if(product.productType=="Other"){
+            }/*else if(product.productType=="Other"){
                  $("#other").attr('checked','checked');
                  productType="other";
-            }
+            }*/
 
             $("#id").val(product.id),
             $("#productName").val(product.productName),
@@ -99,22 +117,24 @@ function init(){
         event.preventDefault();
         console.log("required control");
         if(user=="Chef" && productType=="Food"){
+            console.log("user==Chef && productType==Food");
             createProduct();
-        }else{
+        }/*else{
             toastr.info("You can save only food products!");
-        }
+        }*/
         if(user=="Headwaiter" && productType=="Drink"){
+            console.log("user==Headwaiter && productType==Drink");
             createProduct();
-        }else{
+        }/*else{
             toastr.info("You can save only drink products!");
-        }
+        }*/
         if(user=="Admin"){
             createProduct();
         }
     });
 
-    initProductTable();
-    getProduct();
+
+    //getProduct();
 }
 
 function initProductTable() {
@@ -170,27 +190,30 @@ function initProductTable() {
         });
     }
 
-function getProduct(){
-    if(user != "Admin"){
-        api= api;
+function getProduct(role){
+    var url="";
+    if(role== "Admin"){
+        url= api;
     }/*else{
     var url="http://localhost:9090/api/product/productType/"+productType;
     }*/
-/*    console.log('inside getProduct' );
-    If(user=="Chef" && productType=="Food"){
-        url = url + "/productType/"+productType;
+    console.log('inside getProduct' );
+    if(role=="Chef"){
+        url = api + "/productType/Food";
     }
-    If(user=="Headwaiter" && productType=="Drink"){
-        url = url + "/productType/"+productType;
-    }else{
-        toastr.info("You can save only drink products!");
+    if(role=="Headwaiter"){
+        url = api + "/productType/Drink";
     }
+    console.log(role+"insede getproduct");
+    console.log(url+"insede getproduct");
+/*
     if(user=="Admin"){
         createProduct();
-    }*/
+    }
+*/
 
     $.ajax({
-        url: api,
+        url: url,
         type: "get",
         dataType: "json",
         success: function(products){
@@ -217,7 +240,8 @@ function deleteProduct(){
             dataType: "text",  // get back from frontend
             success: function(message){
                 console.log(message);
-                getProduct();
+                getRole();
+                //getProduct();
             },
             fail: function (error) {
               console.log('Error: ' + error);
@@ -250,7 +274,8 @@ function createProduct(){
         success: function(product, textStatus, jqXHR){
             console.log(product);
             $('#productModal').modal('hide');
-            getProduct();
+            getRole();
+            //getProduct();
             },
             done: function(xhr,status,error){
                 console.log('Text Status:' + status);

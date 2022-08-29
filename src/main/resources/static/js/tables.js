@@ -146,7 +146,7 @@ function getTablesData(){
 
 function createTable(){
     console.log('inside createTable' );
-    alert("inside");
+    //alert("inside");
     var tableData = {
         id: $("#id").val(),
         tableNumber: $("#tableNumber").val(),
@@ -166,7 +166,7 @@ function createTable(){
         dataType: "json",
         success: function(table, textStatus, jqXHR) {
             console.log(table);
-            alert("inside succes");
+            //alert("inside succes");
             // Clear fields in page
             $("#id").val('');
             $("#tableNumber").val('');
@@ -184,10 +184,10 @@ function createTable(){
             console.log('Text Status:' + status);
             console.log(' - message: ' + responseText.message);
 
-            toastr.info(responseText.message);
+            //toastr.info(responseText.message);
         },
         fail: function (error) {
-            alert("inside fail");
+            //alert("inside fail");
             console.log('Error: ' + error);
         }
     });
