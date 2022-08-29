@@ -1,0 +1,30 @@
+version: "3.7"
+networks:
+   appnet:
+services:
+  app-service:
+    build: .
+    restart: always
+    ports:
+      - "8080:9991"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-service:3306/mydb
+      SPRING_DATASOURCE_USERNAME: djs
+      SPRING_DATASOURCE_PASSWORD: djs
+    depends_on:
+      - db-service
+    networks:
+      - appnet
+  db-service:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_USER: djs
+      MYSQL_PASSWORD: djs
+      MYSQL_DATABASE: mydb
+    networks:
+      - appnet
