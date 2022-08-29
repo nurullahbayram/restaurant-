@@ -25,5 +25,15 @@ pipeline {
             }
         }
     }
+    stage('Finalize') {
+      steps {
+        bat 'echo "Finalizing"'
+      }
+      post{
+        always {
+         mail bcc: '', body: 'Pipeline has been succesfully executed ', cc: '', from: 'cornelius.broekhuis@capgemini.com', replyTo: 'cornelius.broekhuis@capgemini.com', subject: 'Pipeline has been succesfully executed ', to: 'cornelius.broekhuis@capgemini.com'
+        }
+      }
+    }
   }
 }
